@@ -1,0 +1,3332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnYu — Science & Knowledge Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f5f5f0;
+      color: #1a1a2e;
+      font-size: 16px;
+    }
+
+    /* ── Typography ── */
+    .serif {
+      font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f0ede8;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #b0a898;
+      border-radius: 2px;
+    }
+
+    /* ── Tab nav ── */
+    .tab-item {
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 14px 2px;
+      border-bottom: 2px solid transparent;
+      color: #6b6b6b;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .tab-item:hover {
+      color: #1a1a2e;
+    }
+
+    .tab-item.active {
+      border-bottom-color: #1a1a2e;
+      color: #1a1a2e;
+      font-weight: 700;
+    }
+
+    /* ── Expandable tabs ── */
+    #tabNav {
+      display: flex;
+      gap: 28px;
+      overflow-x: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      align-items: center;
+    }
+
+    #tabNav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .expand-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      width: 38px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid #d0ccc4;
+      color: #6b6b6b;
+      background: #fff;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .expand-btn:hover {
+      border-color: #1a1a2e;
+      color: #1a1a2e;
+      background: #faf9f6;
+    }
+
+    .expand-btn.active {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.12);
+    }
+
+    body.dark .expand-btn {
+      border-color: #2e3140;
+      color: #8a8880;
+      background: #161920;
+    }
+
+    body.dark .expand-btn:hover {
+      border-color: #dcd8d0;
+      color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    body.dark .expand-btn.active {
+      border-color: #d4a843;
+      color: #d4a843;
+      background: rgba(212, 168, 67, 0.15);
+    }
+
+    .expanded-tabs {
+      display: none;
+      padding: 12px 0;
+      border-bottom: 1px solid #ede9e2;
+      background: #faf9f6;
+    }
+
+    .expanded-tabs.open {
+      display: block;
+    }
+
+    body.dark .expanded-tabs {
+      background: #1e2128;
+      border-bottom-color: #2e3140;
+    }
+
+    .expanded-tabs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 8px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .expanded-tab-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid #d0ccc4;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.78rem;
+      color: #6b6b6b;
+      background: #fff;
+      white-space: nowrap;
+    }
+
+    .expanded-tab-item:hover {
+      border-color: #1a1a2e;
+      color: #1a1a2e;
+      background: #fff;
+    }
+
+    .expanded-tab-item.active {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.12);
+      font-weight: 600;
+    }
+
+    body.dark .expanded-tab-item {
+      border-color: #2e3140;
+      color: #8a8880;
+      background: #161920;
+    }
+
+    body.dark .expanded-tab-item:hover {
+      border-color: #dcd8d0;
+      color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    body.dark .expanded-tab-item.active {
+      border-color: #d4a843;
+      color: #d4a843;
+      background: rgba(212, 168, 67, 0.15);
+    }
+
+    /* ── Skeleton ── */
+    @keyframes shimmer {
+      0% {
+        background-position: -600px 0
+      }
+
+      100% {
+        background-position: 600px 0
+      }
+    }
+
+    .skel {
+      background: linear-gradient(90deg, #e8e4dc 25%, #f5f2ec 50%, #e8e4dc 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    /* ── Article card ── */
+    .a-card {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.35s cubic-bezier(.4, 0, .2, 1);
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .a-card:hover {
+      box-shadow: 0 16px 48px rgba(26, 26, 46, 0.14);
+      transform: translateY(-6px);
+      border-color: rgba(201, 168, 76, 0.3);
+    }
+
+    /* ── Card image ── */
+    .c-img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+
+    .c-img.vis {
+      opacity: 1;
+    }
+
+    /* ── Fade up animation ── */
+    @keyframes fu {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .fade-up {
+      animation: fu 0.38s ease both;
+    }
+
+    /* ── Modal ── */
+    .modal-wrap {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(15, 12, 10, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow-y: auto;
+      padding: 48px 16px 48px;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-wrap.open {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      opacity: 1;
+    }
+
+    .modal-box {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      max-width: 760px;
+      width: 100%;
+      margin: auto;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      border-radius: 16px;
+      box-shadow: 0 32px 100px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* ── Reader body ── */
+    .reader p {
+      margin-bottom: 1.5em;
+      line-height: 1.92;
+      color: #2d2d2d;
+    }
+
+    .reader p:first-child::first-letter {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 3.4em;
+      float: left;
+      line-height: 0.78;
+      margin: 0.08em 0.08em 0 0;
+      color: #1a1a2e;
+      font-weight: 700;
+    }
+
+    /* ── Divider ── */
+    .rule {
+      height: 1px;
+      background: linear-gradient(90deg, #d0ccc4, #e8e4dc, transparent);
+    }
+
+    /* ── Search ── */
+    .search-box {
+      font-size: 0.82rem;
+      border: 1px solid #d8d4cc;
+      background: #faf9f6;
+      padding: 8px 16px;
+      color: #1a1a2e;
+      outline: none;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+    }
+
+    .search-box:focus {
+      border-color: #c9a84c;
+      box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+    }
+
+    /* ── Featured ticker ── */
+    .ticker-line {
+      background: #1a1a2e;
+      color: #d4cfc7;
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 10px 0;
+    }
+
+    /* ── Hero strip ── */
+    .hero-strip {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(250, 249, 246, 0.9) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(232, 228, 220, 0.6);
+      padding: 42px 0 32px;
+    }
+
+    /* ── Section label ── */
+    .section-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8a8070;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    /* ── Mobile ── */
+    @media(max-width:640px) {
+      .modal-wrap {
+        padding: 0;
+      }
+
+      .modal-box {
+        min-height: 100vh;
+        border-radius: 0;
+      }
+
+      .reader p:first-child::first-letter {
+        font-size: 2.8em;
+      }
+    }
+
+    /* ── Dark Mode ── */
+    body.dark {
+      background: #0a0c10;
+      color: #dcd8d0;
+    }
+
+    body.dark header {
+      background: rgba(18, 20, 28, 0.82) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-color: rgba(40, 44, 56, 0.6) !important;
+    }
+
+    body.dark .modal-box {
+      background: rgba(22, 25, 32, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: rgba(45, 49, 64, 0.5);
+    }
+
+    body.dark .a-card {
+      background: rgba(22, 25, 32, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-color: rgba(45, 49, 64, 0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark .a-card:hover {
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+      border-color: rgba(212, 168, 67, 0.3);
+    }
+
+    body.dark footer {
+      background: rgba(18, 20, 28, 0.85);
+      border-color: rgba(40, 44, 56, 0.6);
+    }
+
+    body.dark .hero-strip {
+      background: rgba(18, 20, 28, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-color: rgba(40, 44, 56, 0.5);
+    }
+
+    body.dark .ticker-line {
+      background: #0a0c0f;
+    }
+
+    body.dark .tab-item {
+      color: #7a7870;
+    }
+
+    body.dark .tab-item:hover {
+      color: #dcd8d0;
+    }
+
+    body.dark .tab-item.active {
+      border-bottom-color: #dcd8d0;
+      color: #dcd8d0;
+    }
+
+    body.dark .search-box {
+      background: #1e2128;
+      border-color: #2e3140;
+      color: #dcd8d0;
+    }
+
+    body.dark .search-box:focus {
+      border-color: #d4a843;
+      box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.15);
+    }
+
+    body.dark .skel {
+      background: linear-gradient(90deg, #1e2128 25%, #252830 50%, #1e2128 75%);
+      background-size: 600px 100%;
+    }
+
+    body.dark .rule {
+      background: linear-gradient(90deg, #2e3140, #252830, transparent);
+    }
+
+    body.dark ::-webkit-scrollbar-track {
+      background: #161920;
+    }
+
+    body.dark ::-webkit-scrollbar-thumb {
+      background: #2e3140;
+    }
+
+    body.dark #heroHeading {
+      color: #dcd8d0 !important;
+    }
+
+    body.dark #heroSub {
+      color: #8a8880 !important;
+    }
+
+    body.dark #heroEyebrow {
+      color: #6b6760 !important;
+    }
+
+    body.dark .serif {
+      color: #dcd8d0;
+    }
+
+    /* ── Arabic (RTL) mode ── */
+    body.ar {
+      direction: rtl;
+      font-family: 'Cairo', system-ui, sans-serif;
+    }
+
+    body.ar .serif {
+      font-family: 'Amiri', Georgia, serif;
+    }
+
+    body.ar .tab-item {
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 0.85rem;
+    }
+
+    body.ar .reader p:first-child::first-letter {
+      float: right;
+      margin: 0.08em 0 0 0.08em;
+    }
+
+    body.ar #tabNav {
+      flex-direction: row-reverse;
+    }
+
+    /* ── Control buttons (lang / theme) ── */
+    .ctrl-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      background: transparent;
+      border: 1px solid #d0ccc4;
+      color: #6b6b6b;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      border-radius: 8px;
+    }
+
+    .ctrl-btn:hover {
+      border-color: #1a1a2e;
+      color: #1a1a2e;
+      background: #faf9f6;
+    }
+
+    body.dark .ctrl-btn {
+      border-color: #2e3140;
+      color: #8a8880;
+      background: transparent;
+    }
+
+    body.dark .ctrl-btn:hover {
+      border-color: #dcd8d0;
+      color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    /* ── Reading Progress Bar ── */
+    #readProgress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #c9a84c, #e8c87c);
+      z-index: 999;
+      transition: width 0.08s linear;
+    }
+
+    body.dark #readProgress {
+      background: linear-gradient(90deg, #d4a843, #f0d68c);
+    }
+
+    /* ── Mobile hamburger / bottom nav ── */
+    #mobileMenuBtn {
+      display: none;
+    }
+
+    #mobileDrawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+    }
+
+    #mobileDrawerBg {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 13, 10, 0.55);
+      backdrop-filter: blur(6px);
+    }
+
+    #mobileDrawerPanel {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 28px 40px;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(.4, 0, .2, 1);
+      box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    #mobileDrawerPanel.open {
+      transform: translateY(0);
+    }
+
+    body.dark #mobileDrawerPanel {
+      background: rgba(22, 25, 32, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top-color: rgba(45, 49, 64, 0.5);
+    }
+
+    .mob-tab {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 14px 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #4a4a4a;
+      background: none;
+      border: none;
+      border-bottom: 1px solid #ede9e2;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      margin: 2px 0;
+    }
+
+    .mob-tab:last-child {
+      border-bottom: none;
+    }
+
+    .mob-tab.active {
+      color: #1a1a2e;
+      font-weight: 700;
+      background: rgba(201, 168, 76, 0.08);
+      padding-left: 16px;
+    }
+
+    body.dark .mob-tab {
+      color: #8a8880;
+      border-bottom-color: #252830;
+    }
+
+    body.dark .mob-tab.active {
+      color: #dcd8d0;
+      background: rgba(212, 168, 67, 0.12);
+    }
+
+    body.ar .mob-tab {
+      text-align: right;
+      padding-left: 0;
+      padding-right: 16px;
+    }
+
+    body.ar .mob-tab.active {
+      padding-right: 20px;
+      padding-left: 0;
+    }
+
+    /* ── Responsive grid (overrides inline style) ── */
+    @media(max-width:640px) {
+      #grid {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+      }
+
+      main {
+        padding: 24px 16px 80px !important;
+      }
+
+      .hero-strip {
+        padding: 24px 0 20px !important;
+      }
+
+      #heroHeading {
+        font-size: 1.5rem !important;
+      }
+
+      #mobileMenuBtn {
+        display: flex;
+      }
+
+      #tabNav {
+        display: none !important;
+      }
+    }
+
+    @media(min-width:641px) and (max-width:900px) {
+      #grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 22px !important;
+      }
+    }
+
+    @media(min-width:901px) {
+      #grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+    }
+
+    /* ── Listen button ── */
+    .listen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #7a7260;
+      background: none;
+      border: 1px solid #d8d4cc;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+    }
+
+    .listen-btn:hover {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.05);
+    }
+
+    .listen-btn.playing {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.12);
+    }
+
+    body.dark .listen-btn {
+      color: #6b6760;
+      border-color: #2e3140;
+      background: transparent;
+    }
+
+    body.dark .listen-btn:hover,
+    .listen-btn.playing {
+      border-color: #d4a843;
+      color: #d4a843;
+      background: rgba(212, 168, 67, 0.12);
+    }
+
+    /* ── Academic action buttons (Cite / Zen) ── same family as listen-btn ── */
+    .acad-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #7a7260;
+      background: none;
+      border: 1px solid #d8d4cc;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      border-radius: 6px;
+    }
+
+    .acad-btn:hover {
+      border-color: #1a1a2e;
+      color: #1a1a2e;
+      background: #faf9f6;
+    }
+
+    body.dark .acad-btn {
+      color: #6b6760;
+      border-color: #2e3140;
+      background: transparent;
+    }
+
+    body.dark .acad-btn:hover {
+      border-color: #dcd8d0;
+      color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    .acad-btn.zen-on {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    /* ── Citation toast ── */
+    #citeToast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: #1a1a2e;
+      color: #e8e4dc;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      padding: 12px 24px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      max-width: 90vw;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    #citeToast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    body.dark #citeToast {
+      background: linear-gradient(135deg, #d4a843, #f0d68c);
+      color: #1a1a2e;
+    }
+
+    /* ── Zen / Focus mode ── */
+    body.zen .modal-box {
+      max-width: 680px;
+      background: #faf6f0 !important;
+    }
+
+    body.zen #mBody {
+      font-size: 1.1rem !important;
+      line-height: 2.1 !important;
+      color: #2a2018 !important;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    body.zen #mTitle {
+      text-align: center !important;
+      color: #1a1108 !important;
+    }
+
+    body.zen #mSource,
+    body.zen #mDate,
+    body.zen #mCat {
+      opacity: 0.45;
+    }
+
+    body.zen .rule {
+      background: rgba(42, 32, 24, 0.12);
+    }
+
+    body.dark.zen .modal-box {
+      background: #1c1610 !important;
+    }
+
+    body.dark.zen #mBody {
+      color: #d4c8b8 !important;
+    }
+
+    body.dark.zen #mTitle {
+      color: #e8dece !important;
+    }
+
+    /* ── Reading-time badge on card ── */
+    .read-time {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a09890;
+      font-weight: 500;
+      border: 1px solid #e8e4dc;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    body.dark .read-time {
+      color: #6b6760;
+      border-color: #2e3140;
+      background: #1e2128;
+    }
+
+    /* ── Refresh button ── */
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #1a1a2e;
+      background: none;
+      border: 1px solid #e8e4dc;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+    }
+
+    .refresh-btn:hover {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.06);
+    }
+
+    .refresh-btn.loading {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .refresh-spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    body.dark .refresh-btn {
+      color: #dcd8d0;
+      border-color: #2e3140;
+      background: transparent;
+    }
+
+    body.dark .refresh-btn:hover {
+      border-color: #d4a843;
+      color: #d4a843;
+      background: rgba(212, 168, 67, 0.1);
+    }
+
+    /* ── Load More button ── */
+    .load-more-btn {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1a1a2e;
+      background: none;
+      border: 1px solid #e8e4dc;
+      padding: 14px 28px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 10px;
+    }
+
+    .load-more-btn:hover {
+      border-color: #1a1a2e;
+      background: #faf9f6;
+      box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08);
+    }
+
+    body.dark .load-more-btn {
+      color: #dcd8d0;
+      border-color: #2e3140;
+      background: transparent;
+    }
+
+    body.dark .load-more-btn:hover {
+      border-color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    /* ── Category badge on card ── */
+    .cat-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8a8070;
+      font-weight: 600;
+      background: #faf9f6;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #e8e4dc;
+    }
+
+    body.dark .cat-badge {
+      color: #6b6760;
+      background: #1e2128;
+      border-color: #2e3140;
+    }
+
+    /* ── Bookmark button ── */
+    .bookmark-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid #e8e4dc;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .bookmark-btn:hover {
+      border-color: #c9a84c;
+      background: rgba(201, 168, 76, 0.06);
+    }
+
+    .bookmark-btn.saved {
+      border-color: #c9a84c;
+      background: rgba(201, 168, 76, 0.12);
+    }
+
+    body.dark .bookmark-btn {
+      border-color: #2e3140;
+      background: #1e2128;
+    }
+
+    body.dark .bookmark-btn:hover {
+      border-color: #d4a843;
+      background: rgba(212, 168, 67, 0.12);
+    }
+
+    body.dark .bookmark-btn.saved {
+      border-color: #d4a843;
+      background: rgba(212, 168, 67, 0.15);
+    }
+
+    /* ── Share button ── */
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #7a7260;
+      background: none;
+      border: 1px solid #d8d4cc;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+    }
+
+    .share-btn:hover {
+      border-color: #1a1a2e;
+      color: #1a1a2e;
+      background: #faf9f6;
+    }
+
+    body.dark .share-btn {
+      color: #6b6760;
+      border-color: #2e3140;
+      background: transparent;
+    }
+
+    body.dark .share-btn:hover {
+      border-color: #dcd8d0;
+      color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    /* ── Nav buttons (Bookmarks / Home) ── */
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #6b6b6b;
+      background: none;
+      border: 1px solid #e8e4dc;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+    }
+
+    .nav-btn:hover {
+      border-color: #1a1a2e;
+      color: #1a1a2e;
+      background: #faf9f6;
+    }
+
+    .nav-btn.active {
+      border-color: #c9a84c;
+      color: #c9a84c;
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    body.dark .nav-btn {
+      color: #8a8880;
+      border-color: #2e3140;
+      background: transparent;
+    }
+
+    body.dark .nav-btn:hover {
+      border-color: #dcd8d0;
+      color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    body.dark .nav-btn.active {
+      border-color: #d4a843;
+      color: #d4a843;
+      background: rgba(212, 168, 67, 0.12);
+    }
+
+    /* ── Shortcut hints ── */
+    .shortcut-hint {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a09890;
+      border: 1px solid #e8e4dc;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+
+    body.dark .shortcut-hint {
+      color: #6b6760;
+      border-color: #2e3140;
+      background: #1e2128;
+    }
+
+    /* ── Pulse animation for saved notification ── */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .pulse {
+      animation: pulse 0.4s ease;
+    }
+
+    /* ── Related articles section ── */
+    .related-articles {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid #ede9e2;
+    }
+
+    .related-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8a8070;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .related-item {
+      padding: 14px 16px;
+      border: 1px solid #e8e4dc;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #faf9f6;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .related-item:hover {
+      border-color: #c9a84c;
+      background: rgba(201, 168, 76, 0.05);
+      transform: translateX(4px);
+    }
+
+    body.dark .related-item {
+      border-color: #2e3140;
+      background: #1e2128;
+    }
+
+    body.dark .related-item:hover {
+      border-color: #d4a843;
+      background: rgba(212, 168, 67, 0.08);
+      transform: translateX(4px);
+    }
+
+    body.ar .related-item:hover {
+      transform: translateX(-4px);
+    }
+
+    /* ── Share modal ── */
+    .share-modal-wrap {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 250;
+      background: rgba(20, 18, 15, 0.55);
+      backdrop-filter: blur(6px);
+      overflow-y: auto;
+      padding: 48px 16px;
+    }
+
+    .share-modal-wrap.open {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-modal-box {
+      background: #fff;
+      max-width: 460px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    body.dark .share-modal-box {
+      background: #161920;
+    }
+
+    .share-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e8e4dc;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .share-option:hover {
+      border-color: #1a1a2e;
+      background: #faf9f6;
+      transform: translateX(4px);
+    }
+
+    body.dark .share-option {
+      border-color: #2e3140;
+      background: #1e2128;
+    }
+
+    body.dark .share-option:hover {
+      border-color: #dcd8d0;
+      background: #1e2128;
+    }
+
+    body.ar .share-option:hover {
+      transform: translateX(-4px);
+    }
+
+    .share-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #faf9f6;
+    }
+
+    body.dark .share-icon {
+      background: #1e2128;
+    }
+
+    .share-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2d2d2d;
+    }
+
+    body.dark .share-label {
+      color: #dcd8d0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════ PROGRESS BAR ════════════════ -->
+  <div id="readProgress"></div>
+
+  <!-- ════════════════ HEADER ════════════════ -->
+  <header
+    style="background:rgba(255,255,255,0.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(224,220,212,0.5);position:sticky;top:0;z-index:100;">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;">
+
+      <!-- Brand row -->
+      <div
+        style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid #ede9e2;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <!-- Geometric mark -->
+          <div
+            style="width:38px;height:38px;border:2.5px solid #1a1a2e;position:relative;flex-shrink:0;border-radius:8px;">
+            <div
+              style="position:absolute;inset:5px;background:linear-gradient(135deg,#1a1a2e,#3a3a4e);border-radius:4px;">
+            </div>
+          </div>
+          <div>
+            <div class="serif"
+              style="font-size:1.45rem;font-weight:700;color:#1a1a2e;letter-spacing:-0.03em;line-height:1;">LearnYu
+            </div>
+            <div style="font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:#9a9590;margin-top:2px;"
+              data-portal-subtitle>Science & Knowledge Portal</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <button id="homeBtn" class="nav-btn active" onclick="showHome()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M3 9.5l9-6.5 9 6.5V20a2 2 0 01-2 2h-4v-8H9v8H5a2 2 0 01-2-2V9.5z" />
+            </svg>
+            Home
+          </button>
+          <button id="bookmarksBtn" class="nav-btn" onclick="showBookmarks()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z" />
+            </svg>
+            Bookmarks
+          </button>
+          <span id="hdrDate" style="font-size:0.72rem;color:#9a9590;display:none;"></span>
+          <!-- Language toggle -->
+          <button id="langBtn" class="ctrl-btn" onclick="toggleLang()" title="Switch language (⌘/Ctrl + L)">EN /
+            عربي</button>
+          <!-- Theme toggle -->
+          <button id="themeBtn" class="ctrl-btn" onclick="toggleTheme()" title="Toggle dark mode (⌘/Ctrl + D)"
+            style="width:38px;padding:0;">
+            <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+            </svg>
+            <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" style="display:none;">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          </button>
+          <input id="searchBox" class="search-box" type="text" placeholder="Search articles… (⌘/Ctrl + K)"
+            style="width:220px;" />
+          <!-- Hamburger (mobile only) -->
+          <button id="mobileMenuBtn" class="ctrl-btn" onclick="openMobileMenu()" style="width:40px;padding:0;gap:0;"
+            title="Menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category tabs -->
+      <div style="display:flex;align-items:center;gap:12px;position:relative;">
+        <div id="tabNav" style="display:flex;gap:24px;overflow:hidden;flex:1;align-items:center;height:44px;">
+        </div>
+        <button id="expandTabsBtn" class="expand-btn" onclick="toggleExpandTabs()" title="Show all categories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Expanded Tabs Grid -->
+      <div id="expandedTabs" class="expanded-tabs">
+        <div id="expandedTabsGrid" class="expanded-tabs-grid"></div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ════════════════ MOBILE CATEGORY DRAWER ════════════════ -->
+  <div id="mobileDrawer">
+    <div id="mobileDrawerBg" onclick="closeMobileMenu()"></div>
+    <div id="mobileDrawerPanel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <span style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:#8a8070;font-weight:700;"
+          id="mobDrawerLabel">Categories</span>
+        <button onclick="closeMobileMenu()"
+          style="background:none;border:none;cursor:pointer;color:#9a9590;padding:6px;border-radius:6px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="mobileTabList"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ TICKER ════════════════ -->
+  <div class="ticker-line">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span style="color:#7a7570;flex-shrink:0;">LATEST —</span>
+      <span id="tickerText" style="font-style:italic;color:#c4bfc7;">Fetching latest research…</span>
+    </div>
+  </div>
+
+  <!-- ════════════════ HERO STRIP ════════════════ -->
+  <div class="hero-strip" id="heroStrip">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;">
+      <div style="max-width:720px;">
+        <div class="section-eyebrow" id="heroEyebrow">Curated Research</div>
+        <h1 id="heroHeading" class="serif"
+          style="font-size:clamp(1.8rem,3vw,2.7rem);font-weight:700;color:#1a1a2e;line-height:1.2;margin-bottom:10px;">
+          Physics & Space</h1>
+        <p id="heroSub" style="font-size:0.88rem;color:#6b6b6b;line-height:1.7;max-width:640px;">
+          Discoveries from particle accelerators to deep-field telescopes — the science of the universe at every scale.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ MAIN GRID ════════════════ -->
+  <main id="mainContent" style="max-width:1280px;margin:0 auto;padding:36px 24px 72px;">
+
+    <div
+      style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px;">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div class="rule" style="flex:1;min-width:100px;"></div>
+        <span id="countLabel"
+          style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#9a9590;white-space:nowrap;"></span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button id="refreshBtn" class="refresh-btn" onclick="refreshCategory()">
+          <svg id="refreshIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.2">
+            <path d="M23 4v6h-6" />
+            <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+          </svg>
+          <span id="refreshLabel">Refresh Articles</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;"></div>
+
+    <div id="emptyBox" style="display:none;text-align:center;padding:80px 0;">
+      <div class="serif" style="font-size:1.15rem;color:#9a9590;margin-bottom:10px;">No articles found.</div>
+      <div style="font-size:0.85rem;color:#b0aca5;margin-bottom:24px;">Try a different category or check your
+        connection.</div>
+      <button onclick="refreshCategory()"
+        style="margin-top:0;font-size:0.8rem;color:#1a1a2e;text-decoration:underline;cursor:pointer;background:none;border:none;">Refresh
+        Articles</button>
+    </div>
+
+    <div id="loadMoreBox" style="display:none;text-align:center;margin-top:52px;">
+      <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreArticles()">
+        Load More Articles
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ════════════════ BOOKMARKS SECTION ════════════════ -->
+  <section id="bookmarksSection" style="max-width:1280px;margin:0 auto;padding:36px 24px 72px;display:none;">
+    <div
+      style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div class="section-eyebrow" style="margin-bottom:8px;">Your Reading List</div>
+        <h2 class="serif" style="font-size:1.8rem;font-weight:700;color:#1a1a2e;line-height:1.2;margin-bottom:4px;">
+          Bookmarks</h2>
+        <p style="font-size:0.85rem;color:#6b6b6b;max-width:480px;">Articles you've saved for later reading.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button id="clearBookmarksBtn" class="ctrl-btn" onclick="clearBookmarks()" style="border-color:#e8e4dc;">Clear
+          All</button>
+      </div>
+    </div>
+
+    <div id="bookmarksGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
+    </div>
+
+    <div id="noBookmarksBox" style="display:none;text-align:center;padding:100px 0;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#b0a890" stroke-width="1.5"
+        style="margin-bottom:20px;">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z" />
+      </svg>
+      <div class="serif" style="font-size:1.15rem;color:#9a9590;margin-bottom:10px;">No bookmarks yet.</div>
+      <div style="font-size:0.85rem;color:#b0aca5;margin-bottom:28px;">Click the bookmark icon on any article to save it
+        here.</div>
+      <button class="load-more-btn" onclick="showHome()">Browse Articles</button>
+    </div>
+  </section>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer
+    style="border-top:1px solid rgba(224,220,212,0.5);background:rgba(255,255,255,0.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:40px 24px;">
+    <div
+      style="max-width:1280px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:30px;height:30px;border:2.5px solid #1a1a2e;position:relative;border-radius:6px;">
+          <div style="position:absolute;inset:4px;background:#1a1a2e;border-radius:3px;"></div>
+        </div>
+        <span class="serif" style="font-weight:700;font-size:1.05rem;color:#1a1a2e;">LearnYu</span>
+      </div>
+      <p style="font-size:0.75rem;color:#9a9590;max-width:560px;line-height:1.7;">
+        Articles aggregated from open scientific RSS feeds including Wikipedia, arXiv, NASA, Hacker News, and more. For
+        educational reference only.
+      </p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin-top:12px;">
+        <div style="display:flex;align-items:center;gap:6px;"><span class="shortcut-hint">⌘/Ctrl K</span><span
+            style="font-size:0.72rem;color:#a09890;">Search</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="shortcut-hint">⌘/Ctrl L</span><span
+            style="font-size:0.72rem;color:#a09890;">Language</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="shortcut-hint">⌘/Ctrl D</span><span
+            style="font-size:0.72rem;color:#a09890;">Dark Mode</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="shortcut-hint">ESC</span><span
+            style="font-size:0.72rem;color:#a09890;">Close</span></div>
+      </div>
+      <p style="font-size:0.65rem;color:#b8b4ae;letter-spacing:0.08em;margin-top:10px;">SCIENCE & KNOWLEDGE PORTAL</p>
+    </div>
+  </footer>
+
+  <!-- ════════════════ READER MODAL ════════════════ -->
+  <div id="modal" class="modal-wrap">
+    <div class="modal-box" onclick="event.stopPropagation()">
+
+      <!-- Hero image -->
+      <div
+        style="position:relative;height:360px;overflow:hidden;background:#e8e4dc;flex-shrink:0;border-radius:12px 12px 0 0;">
+        <img id="mImg" src="" alt=""
+          style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.45s ease;display:block;" />
+        <div
+          style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,18,15,0.1) 0%,rgba(20,18,15,0.7) 100%);pointer-events:none;">
+        </div>
+        <!-- Close -->
+        <button onclick="closeModal()"
+          style="position:absolute;top:18px;right:18px;width:40px;height:40px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;border-radius:10px;"
+          onmouseover="this.style.background='rgba(255,255,255,0.32)'"
+          onmouseout="this.style.background='rgba(255,255,255,0.18)'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+        <!-- Category label -->
+        <div style="position:absolute;bottom:26px;left:32px;">
+          <span id="mCat"
+            style="font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.75);font-weight:600;"></span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div id="modalContent" style="padding:36px 40px 40px;">
+
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="mSource"
+              style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:#8a8070;font-weight:600;"></span>
+            <span style="color:#d0ccc4;font-size:0.75rem;">|</span>
+            <span id="mDate" style="font-size:0.72rem;color:#a09890;"></span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button id="mBookmarkBtn" class="bookmark-btn" onclick="toggleArticleBookmark()">
+              <svg id="mBookmarkIconEmpty" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z" />
+              </svg>
+              <svg id="mBookmarkIconFilled" width="18" height="18" viewBox="0 0 24 24" fill="#c9a84c" stroke="#c9a84c"
+                stroke-width="1.5" style="display:none;">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <h1 id="mTitle" class="serif"
+          style="font-size:clamp(1.4rem,2.5vw,2.1rem);font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:22px;">
+        </h1>
+
+        <div class="rule" style="margin-bottom:28px;"></div>
+
+        <div id="mBody" class="reader serif" style="font-size:1.02rem;color:#2d2d2d;"></div>
+
+        <div
+          style="margin-top:36px;padding-top:32px;border-top:1px solid #ede9e2;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
+          <!-- Progress bar inside modal (top of content area) -->
+          <div id="modalProgressWrap"
+            style="position:absolute;top:0;left:0;right:0;height:3px;background:transparent;pointer-events:none;">
+            <div id="modalProgress"
+              style="height:100%;width:0%;background:linear-gradient(90deg,#c9a84c,#e8c87c);transition:width 0.08s linear;">
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <a id="mLink" href="#" target="_blank" rel="noopener noreferrer"
+              style="font-size:0.82rem;font-weight:600;color:#1a1a2e;text-decoration:none;display:inline-flex;align-items:center;gap:7px;letter-spacing:0.02em;"
+              onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+              Read full article
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <!-- Share button -->
+            <button id="shareBtn" class="share-btn" onclick="openShareModal()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <path d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49" />
+              </svg>
+              Share
+            </button>
+            <!-- Cite button -->
+            <button id="citeBtn" class="acad-btn" onclick="citeArticle()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+              </svg>
+              <span id="citeLabel">Cite</span>
+            </button>
+            <!-- Zen mode button -->
+            <button id="zenBtn" class="acad-btn" onclick="toggleZen()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+              </svg>
+              <span id="zenLabel">Focus</span>
+            </button>
+            <!-- Listen button -->
+            <button id="listenBtn" class="listen-btn" onclick="toggleListen()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+              <span id="listenLabel">Listen</span>
+            </button>
+            <button onclick="closeModal()"
+              style="font-size:0.75rem;color:#9a9590;cursor:pointer;background:none;border:none;letter-spacing:0.06em;text-transform:uppercase;padding:0 8px;"
+              onmouseover="this.style.color='#1a1a2e'" onmouseout="this.style.color='#9a9590'"
+              id="closeModalBtn">Close</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Related articles -->
+      <div style="padding:0 40px 36px;">
+        <div id="relatedSection" class="related-articles">
+          <div class="related-title">Related Articles</div>
+          <div id="relatedArticlesList"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════ SHARE MODAL ════════════════ -->
+  <div id="shareModal" class="share-modal-wrap" onclick="closeShareModal()">
+    <div class="share-modal-box" onclick="event.stopPropagation()">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <h3 class="serif" style="font-size:1.1rem;font-weight:700;color:#1a1a2e;">Share Article</h3>
+        <button onclick="closeShareModal()"
+          style="background:none;border:none;cursor:pointer;color:#9a9590;padding:4px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="shareOptions">
+        <div class="share-option" onclick="shareTwitter()">
+          <div class="share-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1DA1F2">
+              <path
+                d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+            </svg>
+          </div>
+          <div class="share-label">Twitter</div>
+        </div>
+
+        <div class="share-option" onclick="shareLinkedIn()">
+          <div class="share-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#0077b5">
+              <path
+                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+            </svg>
+          </div>
+          <div class="share-label">LinkedIn</div>
+        </div>
+
+        <div class="share-option" onclick="shareEmail()">
+          <div class="share-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ea4335">
+              <path
+                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+            </svg>
+          </div>
+          <div class="share-label">Email</div>
+        </div>
+
+        <div class="share-option" onclick="copyLink()">
+          <div class="share-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2.2">
+              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+            </svg>
+          </div>
+          <div class="share-label">Copy Link</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Citation toast -->
+  <div id="citeToast"></div>
+
+  <script>
+    // ══════════════════════════════════════════════════════════════
+    //  LearnYu  —  Science & Knowledge Portal  v4
+    //  Enhanced with bookmarks, sharing, shortcuts, and more!
+    // ══════════════════════════════════════════════════════════════
+
+    // ── LANGUAGE STRINGS ─────────────────────────────────────────
+    var LANG = 'en';
+    var TR = {
+      en: {
+        cats: ['Physics & Space', 'Biology & Genetics', 'Neuroscience', 'Climate & Earth', 'Computing History', 'Mathematics', 'Chemistry', 'AI & Machine Learning', 'Robotics', 'Astronomy', 'Materials Science', 'Paleontology', 'Psychology', 'Nanotechnology', 'Renewable Energy'],
+        descs: [
+          'Discoveries from particle accelerators to deep-field telescopes — the science of the universe at every scale.',
+          'From CRISPR gene editing to evolutionary biology — the life sciences rewriting what it means to be alive.',
+          'Memory, consciousness, cognition and the astonishing complexity of the three-pound organ in your skull.',
+          'Glaciologists, oceanographers and ecologists map a planet under pressure — the science driving the climate conversation.',
+          'From Ada Lovelace to the microprocessor — the intellectual lineage behind every device you use.',
+          'The language of the universe — from number theory to fractals and beyond.',
+          'Molecules, reactions, and the building blocks of matter — the central science.',
+          'From neural networks to transformers — the future of intelligent systems and automation.',
+          'From industrial robots to humanoids — the intersection of mechanical engineering and AI.',
+          'Stars, planets, galaxies, and the mysteries beyond our solar system.',
+          'From superconductors to smart materials — the science of advanced substances.',
+          'Dinosaurs, fossils, and the history of life on Earth.',
+          'The human mind, behavior, emotions, and mental processes.',
+          'Building at the atomic and molecular scale — the future of technology.',
+          'Solar, wind, and sustainable energy sources for tomorrow.'
+        ],
+        curated: 'Curated Research',
+        readBtn: 'Read Article',
+        readFull: 'Read full article',
+        close: 'Close',
+        searching: 'Search articles… (⌘/Ctrl + K)',
+        fetching: 'Fetching latest research…',
+        latest: 'LATEST —',
+        noArticles: 'No articles found.',
+        noArticlesSub: 'Try a different category or check your connection.',
+        retry: 'Retry',
+        langBtn: 'EN / عربي',
+        subtitle: 'Science & Knowledge Portal',
+        cite: 'Cite',
+        focus: 'Focus',
+        listen: 'Listen',
+        stop: 'Stop',
+        cited: 'Citation copied to clipboard!',
+        minRead: 'min read',
+        refresh: 'Refresh Articles',
+        refreshing: 'Refreshing…',
+        loadMore: 'Load More Articles',
+        loadingMore: 'Loading…',
+        share: 'Share',
+        shareTitle: 'Share Article',
+        bookmarked: 'Article bookmarked!',
+        removed: 'Article removed from bookmarks.',
+        noBookmarks: 'No bookmarks yet.',
+        bookmarksSub: 'Click the bookmark icon on any article to save it here.',
+        browseArticles: 'Browse Articles',
+        clearAll: 'Clear All'
+      },
+      ar: {
+        cats: ['الفيزياء والفضاء', 'الأحياء والجينات', 'علوم الأعصاب', 'المناخ والأرض', 'تاريخ الحوسبة', 'الرياضيات', 'الكيمياء', 'الذكاء الاصطناعي', 'الروبوتيات', 'علم الفلك', 'علوم المواد', 'العلم القديم', 'النفسيولوجيا', 'التكنولوجيا النانوية', 'الطاقة المتجددة'],
+        descs: [
+          'اكتشافات من مسرعات الجسيمات إلى التلسكوبات العميقة — علم الكون على كل مستوى.',
+          'من تحرير الجينات إلى علم التطور — علوم الحياة تعيد كتابة مفهوم الحياة.',
+          'الذاكرة والوعي والإدراك وتعقيد الدماغ المذهل.',
+          'علماء المناخ والمحيطات يرسمون صورة كوكب تحت ضغط.',
+          'من أدا لوفلاس إلى المعالج الدقيق — السلالة الفكرية وراء كل جهاز.',
+          'لغة الكون — من نظرية الأعداد إلى الكسور وما بعدها.',
+          'الجزيئات والتفاعلات وبنائيات المادة — العلم المركزي.',
+          'من الشبكات العصبية إلى المحولات — مستقبل الأنظمة الذكية والتأتمم.',
+          'من الروبوتات الصناعية إلى البشرية — تقاطع الهندسة الميكانيكية والذكاء الاصطناعي.',
+          'النجوم والكواكب والمجرات والأسرار وراء نظامنا الشمسي.',
+          'من المواصلات الفائقة إلى المواد الذكية — علم المواد المتقدمة.',
+          'الديناصورات والأحافير وتاريخ الحياة على الأرض.',
+          'العقل البشري والسلوك والعواطف والعمليات العقلية.',
+          'البناء على مقياس الذرة والجزيء — مستقبل التكنولوجيا.',
+          'الطاقة الشمسية والرياحية والمصادر المستدامة للغد.'
+        ],
+        curated: 'بحوث مختارة',
+        readBtn: 'قراءة المقال',
+        readFull: 'اقرأ المقال كاملاً',
+        close: 'إغلاق',
+        searching: 'ابحث في المقالات… (⌘/Ctrl + K)',
+        fetching: 'جاري تحميل آخر الأبحاث…',
+        latest: 'آخر الأخبار —',
+        noArticles: 'لا توجد مقالات.',
+        noArticlesSub: 'جرّب فئة أخرى أو تحقق من الاتصال.',
+        retry: 'إعادة المحاولة',
+        langBtn: 'عربي / EN',
+        subtitle: 'بوابة العلوم والمعرفة',
+        cite: 'اقتباس',
+        focus: 'تركيز',
+        listen: 'استمع',
+        stop: 'إيقاف',
+        cited: 'تم نسخ الاقتباس!',
+        minRead: 'دق للقراءة',
+        refresh: 'تحديث المقالات',
+        refreshing: 'جاري التحديث…',
+        loadMore: 'تحميل المزيد',
+        loadingMore: 'جاري التحميل…',
+        share: 'مشاركة',
+        shareTitle: 'مشاركة المقال',
+        bookmarked: 'تم حفظ المقال!',
+        removed: 'تم إزالة المقال من المحفوظات.',
+        noBookmarks: 'لا توجد محفوظات بعد.',
+        bookmarksSub: 'انقر على أيقونة الحفظ في أي مقال لحفظه هنا.',
+        browseArticles: 'تصفح المقالات',
+        clearAll: 'مسح الكل'
+      }
+    };
+
+    function t(key) { return TR[LANG][key] || TR.en[key] || ''; }
+
+    // ── CATEGORIES ───────────────────────────────────────────────
+    var CATS = [
+      {
+        id: 'physics',
+        label: 'Physics & Space',
+        desc: 'Discoveries from particle accelerators to deep-field telescopes — the science of the universe at every scale.',
+        kw: ['space', 'physics', 'astronomy', 'quantum', 'nasa', 'telescope', 'galaxy', 'particle', 'relativity', 'cosmology', 'star', 'planet', 'orbit', 'rocket', 'gravitational', 'dark matter', 'exoplanet', 'astrophysics', 'black hole'],
+        img: ['telescope', 'space', 'galaxy', 'observatory,night', 'astronomy,stars', 'cosmos', 'milky way', 'nebula,space', 'mars,planet', 'black hole', 'hubble', 'astronaut', 'saturn', 'jupiter', 'comet'],
+        wikiEn: 'Physics',
+        wikiAr: 'الفيزياء',
+        apis: ['wikipedia', 'nasa', 'arxiv']
+      },
+      {
+        id: 'biology',
+        label: 'Biology & Genetics',
+        desc: 'From CRISPR gene editing to evolutionary biology — the life sciences rewriting what it means to be alive.',
+        kw: ['biology', 'genetics', 'dna', 'cell', 'evolution', 'genome', 'crispr', 'protein', 'organism', 'species', 'microbiol', 'enzyme', 'bacteria', 'virus', 'chromosome', 'mutation', 'ecology', 'bioinformatics', 'synthetic biology'],
+        img: ['dna,genetics', 'biology,cell', 'microscope,science', 'nature,plants', 'evolution', 'organism,nature', 'bacteria,science', 'protein,molecule', 'ecology,forest', 'laboratory,biology', 'stem cells', 'gene editing', 'neural networks'],
+        wikiEn: 'Genetics',
+        wikiAr: 'الأحياء',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'neuro',
+        label: 'Neuroscience',
+        desc: 'Memory, consciousness, cognition and the astonishing complexity of the three-pound organ in your skull.',
+        kw: ['brain', 'neuroscience', 'neuron', 'cognition', 'memory', 'consciousness', 'neural', 'cortex', 'synaptic', 'alzheimer', 'mental', 'psychology', 'neurolog', 'dopamine', 'serotonin', 'psychiatric', 'cognitive', 'ai brain', 'neurotech'],
+        img: ['brain,science', 'neuroscience,anatomy', 'mind,psychology', 'neuron,synapse', 'cognition,brain', 'mental health', 'nervous system', 'brain scan', 'neurology', 'cerebral,cortex', 'fmri', 'neuroplasticity'],
+        wikiEn: 'Neuroscience',
+        wikiAr: 'علوم الأعصاب',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'climate',
+        label: 'Climate & Earth',
+        desc: 'Glaciologists, oceanographers and ecologists map a planet under pressure — the science driving the climate conversation.',
+        kw: ['climate', 'earth', 'environment', 'ocean', 'atmosphere', 'geology', 'ecosystem', 'carbon', 'glacier', 'biodiversity', 'temperature', 'weather', 'fossil', 'extinction', 'warming', 'seismic', 'renewable', 'sustainability', 'climate change'],
+        img: ['climate,earth', 'ocean,waves', 'glacier,arctic', 'forest,ecology', 'atmosphere,clouds', 'coral reef', 'desert,sand', 'volcano,earth', 'environmental,science', 'arctic,ice', 'solar panels', 'wind turbines', 'recycling'],
+        wikiEn: 'Climate change',
+        wikiAr: 'تغير المناخ',
+        apis: ['wikipedia', 'nasa', 'arxiv']
+      },
+      {
+        id: 'computing',
+        label: 'Computing History',
+        desc: 'From Ada Lovelace to the microprocessor — the intellectual lineage behind every device you use.',
+        kw: ['computing', 'computer', 'algorithm', 'software', 'hardware', 'programming', 'turing', 'silicon', 'transistor', 'internet', 'code', 'processor', 'artificial', 'machine', 'data', 'semiconductor', 'logic', 'software engineering', 'computer science'],
+        img: ['computer,history', 'technology,hardware', 'circuit,board', 'programming,code', 'silicon,chip', 'computer science', 'datacenter', 'server,technology', 'electronics', 'innovation,tech', 'vintage computer', 'binary code', 'laptop keyboard'],
+        wikiEn: 'History of computing',
+        wikiAr: 'تاريخ الحوسبة',
+        apis: ['wikipedia', 'hackernews', 'github']
+      },
+      {
+        id: 'math',
+        label: 'Mathematics',
+        desc: 'The language of the universe — from number theory to fractals and beyond.',
+        kw: ['mathematics', 'math', 'number theory', 'algebra', 'geometry', 'calculus', 'statistics', 'probability', 'fractal', 'topology', 'combinatorics', 'logic', 'set theory', 'applied mathematics', 'mathematical physics'],
+        img: ['mathematics', 'numbers,math', 'geometry,shapes', 'pi,circle', 'equation,formula', 'blackboard,math', 'calculus', 'statistics,graph', 'fibonacci', 'golden ratio', 'fractal,pattern', 'math,symbols'],
+        wikiEn: 'Mathematics',
+        wikiAr: 'الرياضيات',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'chemistry',
+        label: 'Chemistry',
+        desc: 'Molecules, reactions, and the building blocks of matter — the central science.',
+        kw: ['chemistry', 'molecule', 'atom', 'compound', 'reaction', 'periodic table', 'organic chemistry', 'inorganic chemistry', 'biochemistry', 'materials science', 'nanotechnology', 'chemical engineering', 'molecular biology', 'lab experiment'],
+        img: ['chemistry,laboratory', 'molecule,structure', 'lab,equipment', 'periodic table', 'beaker,experiment', 'science,chemical', 'atoms,physics', 'laboratory,research', 'test tubes', 'microscope,chemistry', 'chemical reaction', 'lab glassware'],
+        wikiEn: 'Chemistry',
+        wikiAr: 'الكيمياء',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'ai',
+        label: 'AI & Machine Learning',
+        desc: 'From neural networks to transformers — the future of intelligent systems and automation.',
+        kw: ['ai', 'machine learning', 'neural network', 'deep learning', 'transformer', 'gpt', 'llm', 'computer vision', 'natural language processing', 'reinforcement learning', 'artificial intelligence', 'machine learning', 'deep learning', 'neural networks', 'computer vision', 'nlp', 'transformers', 'generative ai', 'machine learning algorithms'],
+        img: ['artificial intelligence', 'neural network', 'robot,ai', 'machine learning', 'deep learning', 'computer vision', 'robotics,ai', 'ai brain', 'artificial neural network', 'machine learning algorithm', 'generative ai', 'transformer model'],
+        wikiEn: 'Artificial intelligence',
+        wikiAr: 'الذكاء الاصطناعي',
+        apis: ['wikipedia', 'arxiv', 'hackernews', 'github']
+      },
+      {
+        id: 'robotics',
+        label: 'Robotics',
+        desc: 'From industrial robots to humanoids — the intersection of mechanical engineering and AI.',
+        kw: ['robotics', 'robot', 'automation', 'mechanical engineering', 'humanoid robot', 'industrial robot', 'robotics engineering', 'control systems', 'autonomous robots', 'robotics ai', 'humanoid', 'industrial robots', 'automation engineering'],
+        img: ['robotics,robot', 'industrial robot', 'automation,factory', 'humanoid robot', 'robot,arm', 'robot,industrial', 'robotics engineering', 'automation technology'],
+        wikiEn: 'Robotics',
+        wikiAr: 'الروبوتيات',
+        apis: ['wikipedia', 'arxiv', 'hackernews', 'github']
+      },
+      {
+        id: 'astronomy',
+        label: 'Astronomy',
+        desc: 'Stars, planets, galaxies, and the mysteries beyond our solar system.',
+        kw: ['astronomy', 'planet', 'star', 'galaxy', 'solar system', 'planet', 'star', 'nebula', 'exoplanet', 'black hole', 'cosmology', 'astrophysics', 'astronomy', 'astronomy'],
+        img: ['astronomy,stars', 'galaxy,space', 'nebula,space', 'planet,solar', 'exoplanet', 'black hole', 'telescope', 'cosmos', 'hubble', 'astronomy,observatory'],
+        wikiEn: 'Astronomy',
+        wikiAr: 'علم الفلك',
+        apis: ['wikipedia', 'nasa', 'arxiv']
+      },
+      {
+        id: 'materials',
+        label: 'Materials Science',
+        desc: 'From superconductors to smart materials — the science of advanced substances.',
+        kw: ['materials science', 'material', 'superconductor', 'smart material', 'nanomaterial', 'graphene', 'material engineering', 'advanced materials', 'material science', 'materials engineering', 'materials science'],
+        img: ['material,science', 'superconductor', 'material engineering', 'graphene', 'nanomaterial', 'smart material', 'materials science lab', 'advanced materials'],
+        wikiEn: 'Materials science',
+        wikiAr: 'علوم المواد',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'paleontology',
+        label: 'Paleontology',
+        desc: 'Dinosaurs, fossils, and the history of life on Earth.',
+        kw: ['paleontology', 'dinosaur', 'fossil', 'evolution', 'paleontologist', 'fossils', 'dinosaurs', 'evolutionary biology', 'paleontology'],
+        img: ['dinosaur', 'fossil', 'paleontology', 'dinosaur fossil', 'paleontologist', 'fossil bones', 'dinosaur skeleton'],
+        wikiEn: 'Paleontology',
+        wikiAr: 'العلم القديم',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'psychology',
+        label: 'Psychology',
+        desc: 'The human mind, behavior, emotions, and mental processes.',
+        kw: ['psychology', 'mind', 'behavior', 'emotion', 'mental health', 'cognitive psychology', 'clinical psychology', 'psychology', 'brain', 'neuroscience'],
+        img: ['psychology,mind', 'mental health', 'psychology', 'brain,psychology', 'cognitive psychology', 'psychology lab'],
+        wikiEn: 'Psychology',
+        wikiAr: 'النفسيولوجيا',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'nanotech',
+        label: 'Nanotechnology',
+        desc: 'Building at the atomic and molecular scale — the future of technology.',
+        kw: ['nanotechnology', 'nanomaterial', 'nanoscale', 'nanotech', 'nanoscience', 'nanotechnology engineering', 'molecular nanotechnology'],
+        img: ['nanotechnology', 'nanomaterial', 'molecular nanotechnology', 'nanoscale', 'nanotechnology lab', 'nanoscience'],
+        wikiEn: 'Nanotechnology',
+        wikiAr: 'التكنولوجيا النانوية',
+        apis: ['wikipedia', 'arxiv']
+      },
+      {
+        id: 'renewable',
+        label: 'Renewable Energy',
+        desc: 'Solar, wind, and sustainable energy sources for tomorrow.',
+        kw: ['renewable energy', 'solar', 'wind', 'solar panel', 'wind turbine', 'renewable', 'sustainable', 'renewable energy', 'solar energy', 'wind energy'],
+        img: ['solar panels', 'wind turbines', 'renewable energy', 'solar farm', 'wind farm', 'solar energy', 'wind power'],
+        wikiEn: 'Renewable energy',
+        wikiAr: 'الطاقة المتجددة',
+        apis: ['wikipedia', 'arxiv']
+      }
+    ];
+
+    // ── STATE ─────────────────────────────────────────────────────
+    var activeCat = CATS[0];
+    var cache = {};
+    var searchQ = '';
+    var currentArticles = [];
+    var currentArticle = null;
+    var synth = window.speechSynthesis;
+    var modalScrollListener = null;
+    var isRefreshing = false;
+    var articleOffset = 0;
+    var ARTICLES_PER_PAGE = 24;
+    var bookmarks = [];
+    var showBookmarksPage = false;
+
+    // ── INITIALIZE BOOKMARKS FROM LOCAL STORAGE ─────────────────
+    function initBookmarks() {
+      try {
+        var stored = localStorage.getItem('learnyu_bookmarks');
+        if (stored) bookmarks = JSON.parse(stored);
+      } catch (e) {
+        bookmarks = [];
+      }
+    }
+
+    // ── SAVE BOOKMARKS TO LOCAL STORAGE ─────────────────────────
+    function saveBookmarks() {
+      try {
+        localStorage.setItem('learnyu_bookmarks', JSON.stringify(bookmarks));
+      } catch (e) { }
+    }
+
+    // ── CHECK IF ARTICLE IS BOOKMARKED ───────────────────────────
+    function isArticleBookmarked(article) {
+      if (!article) return false;
+      var title = article.title || '';
+      return bookmarks.some(function (b) { return b.title === title; });
+    }
+
+    // ── TOGGLE BOOKMARK FOR CURRENT ARTICLE ──────────────────────
+    function toggleArticleBookmark() {
+      if (!currentArticle) return;
+      var bookmarkBtn = document.getElementById('mBookmarkBtn');
+      var bookmarkIconEmpty = document.getElementById('mBookmarkIconEmpty');
+      var bookmarkIconFilled = document.getElementById('mBookmarkIconFilled');
+
+      if (isArticleBookmarked(currentArticle)) {
+        // Remove from bookmarks
+        bookmarks = bookmarks.filter(function (b) { return b.title !== currentArticle.title; });
+        bookmarkBtn.classList.remove('saved', 'pulse');
+        bookmarkIconEmpty.style.display = 'block';
+        bookmarkIconFilled.style.display = 'none';
+        showToast(t('removed'));
+      } else {
+        // Add to bookmarks
+        var bookmarkToAdd = {
+          title: currentArticle.title,
+          description: currentArticle.description || '',
+          link: currentArticle.link || '',
+          author: currentArticle.author || '',
+          pubDate: currentArticle.pubDate || '',
+          _wiki: currentArticle._wiki,
+          _arxiv: currentArticle._arxiv,
+          _nasa: currentArticle._nasa,
+          _github: currentArticle._github,
+          _hn: currentArticle._hn,
+          _lang: currentArticle._lang,
+          _catId: activeCat.id,
+          savedAt: new Date().toISOString()
+        };
+        bookmarks.unshift(bookmarkToAdd);
+        bookmarkBtn.classList.add('saved', 'pulse');
+        bookmarkIconEmpty.style.display = 'none';
+        bookmarkIconFilled.style.display = 'block';
+        showToast(t('bookmarked'));
+      }
+
+      saveBookmarks();
+      updateBookmarksBadge();
+    }
+
+    // ── UPDATE BOOKMARK BUTTON IN MODAL ─────────────────────────
+    function updateModalBookmarkButton() {
+      var bookmarkBtn = document.getElementById('mBookmarkBtn');
+      var bookmarkIconEmpty = document.getElementById('mBookmarkIconEmpty');
+      var bookmarkIconFilled = document.getElementById('mBookmarkIconFilled');
+
+      if (isArticleBookmarked(currentArticle)) {
+        bookmarkBtn.classList.add('saved');
+        bookmarkIconEmpty.style.display = 'none';
+        bookmarkIconFilled.style.display = 'block';
+      } else {
+        bookmarkBtn.classList.remove('saved');
+        bookmarkIconEmpty.style.display = 'block';
+        bookmarkIconFilled.style.display = 'none';
+      }
+    }
+
+    // ── TOAST NOTIFICATION ───────────────────────────────────────
+    function showToast(message) {
+      var toast = document.getElementById('citeToast');
+      toast.textContent = message;
+      toast.classList.remove('show');
+      void toast.offsetWidth; // Trigger reflow
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 2500);
+    }
+
+    // ── SHOW HOME / BOOKMARKS ────────────────────────────────────
+    function showHome() {
+      showBookmarksPage = false;
+      document.getElementById('mainContent').style.display = 'block';
+      document.getElementById('heroStrip').style.display = 'block';
+      document.getElementById('bookmarksSection').style.display = 'none';
+      document.getElementById('homeBtn').classList.add('active');
+      document.getElementById('bookmarksBtn').classList.remove('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showBookmarks() {
+      showBookmarksPage = true;
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('heroStrip').style.display = 'none';
+      document.getElementById('bookmarksSection').style.display = 'block';
+      document.getElementById('homeBtn').classList.remove('active');
+      document.getElementById('bookmarksBtn').classList.add('active');
+      renderBookmarks();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── RENDER BOOKMARKS ─────────────────────────────────────────
+    function renderBookmarks() {
+      var bookmarksGrid = document.getElementById('bookmarksGrid');
+      var noBookmarksBox = document.getElementById('noBookmarksBox');
+      var clearBtn = document.getElementById('clearBookmarksBtn');
+
+      if (bookmarks.length === 0) {
+        bookmarksGrid.innerHTML = '';
+        noBookmarksBox.style.display = 'block';
+        clearBtn.style.display = 'none';
+        return;
+      }
+
+      noBookmarksBox.style.display = 'none';
+      clearBtn.style.display = 'inline-flex';
+
+      bookmarksGrid.innerHTML = bookmarks.map(function (article, index) {
+        var cat = CATS.find(function (c) { return c.id === article._catId; }) || activeCat;
+        var imgUrl = getImg(article, cat, index);
+        var snippet = strip(article.description || '', 140);
+        var srcBadge = sourceBadge(article);
+
+        return '<article class="a-card fade-up" style="animation-delay:' + (Math.min(index, 9) * 40) + 'ms;" onclick="openBookmarkedArticle(' + index + ')">'
+          + '<div style="overflow:hidden;height:210px;background:#e8e4dc;">'
+          + '<img class="c-img" data-src="' + esc(imgUrl) + '" alt="' + esc(article.title) + '" onload="this.classList.add(\'vis\')" onerror="this.style.display=\'none\'"/>'
+          + '</div>'
+          + '<div style="padding:22px 22px 18px;">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+          + '<span class="cat-badge">' + esc(srcBadge) + '</span>'
+          + '<button class="bookmark-btn saved" onclick="event.stopPropagation();removeBookmark(' + index + ')" style="width:32px;height:32px;padding:0;">'
+          + '<svg width="16" height="16" viewBox="0 0 24 24" fill="#c9a84c" stroke="#c9a84c" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"/></svg>'
+          + '</button>'
+          + '</div>'
+          + '<h3 class="serif" style="font-size:0.97rem;font-weight:700;color:#1a1a2e;line-height:1.4;margin-bottom:10px;">' + esc(article.title) + '</h3>'
+          + (snippet ? '<p style="font-size:0.8rem;color:#6b6b6b;line-height:1.65;margin-bottom:14px;">' + esc(snippet) + '</p>' : '')
+          + '<div style="border-top:1px solid #ede9e2;padding-top:14px;display:flex;align-items:center;justify-content:space-between;">'
+          + '<span style="font-size:0.72rem;font-weight:600;color:#1a1a2e;letter-spacing:0.04em;">' + t('readBtn') + '</span>'
+          + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'
+          + '</div>'
+          + '</div>'
+          + '</article>';
+      }).join('');
+
+      bookmarksGrid.querySelectorAll('[data-src]').forEach(function (img) {
+        img.src = img.getAttribute('data-src');
+      });
+    }
+
+    // ── OPEN BOOKMARKED ARTICLE ──────────────────────────────────
+    function openBookmarkedArticle(index) {
+      var article = bookmarks[index];
+      if (!article) return;
+      currentArticle = article;
+
+      var cat = CATS.find(function (c) { return c.id === article._catId; }) || activeCat;
+      var imgUrl = getImg(article, cat, index);
+      var mImg = document.getElementById('mImg');
+      mImg.style.opacity = '0';
+      mImg.src = imgUrl;
+      mImg.onload = function () { mImg.style.opacity = '1'; };
+
+      document.getElementById('mCat').textContent = cat.label;
+      document.getElementById('mSource').textContent = source(article);
+      document.getElementById('mDate').textContent = fmtDate(article.pubDate);
+      document.getElementById('mTitle').textContent = article.title;
+      document.getElementById('mBody').innerHTML = buildBody(article);
+      document.getElementById('mLink').href = article.link || '#';
+
+      // Update button labels
+      document.getElementById('listenLabel').textContent = t('listen');
+      document.getElementById('citeLabel').textContent = t('cite');
+      document.getElementById('zenLabel').textContent = t('focus');
+      document.getElementById('listenBtn').classList.remove('playing');
+      document.getElementById('zenBtn').classList.remove('zen-on');
+      document.getElementById('closeModalBtn').textContent = t('close');
+
+      updateModalBookmarkButton();
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // Setup scroll listener
+      var modalBox = document.querySelector('.modal-box');
+      if (modalScrollListener && modalBox) {
+        modalBox.removeEventListener('scroll', modalScrollListener);
+      }
+      modalScrollListener = function () {
+        var scrollTop = modalBox.scrollTop || 0;
+        var scrollHeight = modalBox.scrollHeight - modalBox.clientHeight;
+        var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        document.getElementById('readProgress').style.width = progress + '%';
+        document.getElementById('modalProgress').style.width = progress + '%';
+      };
+      modalBox.addEventListener('scroll', modalScrollListener);
+      // Reset progress
+      document.getElementById('readProgress').style.width = '0%';
+      document.getElementById('modalProgress').style.width = '0%';
+    }
+
+    // ── REMOVE BOOKMARK ──────────────────────────────────────────
+    function removeBookmark(index) {
+      if (index >= 0 && index < bookmarks.length) {
+        bookmarks.splice(index, 1);
+        saveBookmarks();
+        renderBookmarks();
+        updateBookmarksBadge();
+        showToast(t('removed'));
+      }
+    }
+
+    // ── CLEAR ALL BOOKMARKS ──────────────────────────────────────
+    function clearBookmarks() {
+      if (confirm('Clear all bookmarks?')) {
+        bookmarks = [];
+        saveBookmarks();
+        renderBookmarks();
+        updateBookmarksBadge();
+        showToast('All bookmarks cleared!');
+      }
+    }
+
+    // ── UPDATE BOOKMARKS BADGE (optional) ────────────────────────
+    function updateBookmarksBadge() {
+      // Could add a badge to bookmarks button if desired
+    }
+
+    // ── SHARE MODAL ──────────────────────────────────────────────
+    function openShareModal() {
+      if (!currentArticle) return;
+      document.getElementById('shareModal').classList.add('open');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareModal').classList.remove('open');
+    }
+
+    // ── SHARE FUNCTIONS ──────────────────────────────────────────
+    function getShareUrl() {
+      if (currentArticle && currentArticle.link) return currentArticle.link;
+      return window.location.href;
+    }
+
+    function getShareTitle() {
+      if (currentArticle && currentArticle.title) return currentArticle.title;
+      return 'Check out this article on LearnYu';
+    }
+
+    function shareTwitter() {
+      var url = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(getShareUrl()) + '&text=' + encodeURIComponent(getShareTitle());
+      window.open(url, '_blank', 'width=600,height=400');
+    }
+
+    function shareLinkedIn() {
+      var url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(getShareUrl());
+      window.open(url, '_blank', 'width=600,height=400');
+    }
+
+    function shareEmail() {
+      var subject = encodeURIComponent(getShareTitle());
+      var body = encodeURIComponent(getShareUrl());
+      window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
+    }
+
+    function copyLink() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(getShareUrl()).then(function () {
+          showToast('Link copied to clipboard!');
+        }).catch(function () {
+          var textarea = document.createElement('textarea');
+          textarea.value = getShareUrl();
+          document.body.appendChild(textarea);
+          textarea.select();
+          try { document.execCommand('copy'); } catch (e) { }
+          document.body.removeChild(textarea);
+          showToast('Link copied to clipboard!');
+        });
+      }
+    }
+
+    // ── ARXIV API HELPER ─────────────────────────────────────────
+    function fetchArxiv(cat) {
+      const queryMap = {
+        physics: 'cat:hep-th OR cat:hep-ex OR cat:gr-qc OR cat:astro-ph',
+        biology: 'cat:q-bio',
+        neuro: 'cat:q-bio.NC OR cat:q-bio.CB',
+        climate: 'cat:physics.ao-ph OR cat:physics.geo-ph',
+        computing: 'cat:cs',
+        math: 'cat:math',
+        chemistry: 'cat:physics.chem-ph'
+      };
+
+      const query = queryMap[cat.id] || 'cat:physics';
+      const url = 'https://export.arxiv.org/api/query?search_query=' + encodeURIComponent(query) + '&start=' + articleOffset + '&max_results=10&sortBy=submittedDate&sortOrder=descending';
+
+      return fetch(url)
+        .then(function (r) { return r.text(); })
+        .then(function (xmlText) {
+          var parser = new DOMParser();
+          var xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+          var entries = xmlDoc.querySelectorAll('entry');
+
+          return Array.from(entries).map(function (entry) {
+            var titleElem = entry.querySelector('title');
+            var summaryElem = entry.querySelector('summary');
+            var linkElem = entry.querySelector('id');
+            var authorElems = entry.querySelectorAll('author name');
+            var pubDateElem = entry.querySelector('published');
+
+            var authors = Array.from(authorElems).map(function (a) { return a.textContent.trim(); });
+
+            return {
+              title: titleElem ? titleElem.textContent.trim() : '',
+              description: summaryElem ? summaryElem.textContent.trim() : '',
+              link: linkElem ? linkElem.textContent : '',
+              author: authors.length > 2 ? (authors[0] + ' et al.') : authors.join(', '),
+              pubDate: pubDateElem ? pubDateElem.textContent : '',
+              _arxiv: true,
+              _lang: 'en'
+            };
+          });
+        })
+        .catch(function (e) {
+          console.error('ArXiv fetch error:', e);
+          return [];
+        });
+    }
+
+    // ── NASA API HELPER ───────────────────────────────────────────
+    function fetchNASA(cat) {
+      const queryMap = {
+        physics: 'space or astrophysics',
+        climate: 'earth or climate or environment',
+        default: 'science'
+      };
+
+      const query = queryMap[cat.id] || queryMap.default;
+      const url = 'https://images-api.nasa.gov/search?q=' + encodeURIComponent(query) + '&media_type=image&page=1&year_start=2020';
+
+      return fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var items = (data.collection && data.collection.items) || [];
+
+          return items.slice(0, 10).map(function (item) {
+            var dataObj = item.data && item.data[0];
+            var title = dataObj ? dataObj.title : '';
+            var description = dataObj ? (dataObj.description || dataObj.title) : '';
+            var dateCreated = dataObj ? dataObj.date_created : '';
+            var center = dataObj ? dataObj.center : 'NASA';
+
+            var imgUrl = '';
+            if (item.links && item.links.length > 0) {
+              imgUrl = item.links[0].href;
+            }
+
+            return {
+              title: title,
+              description: description,
+              link: dataObj ? 'https://images.nasa.gov/details/' + dataObj.nasa_id : '',
+              author: center,
+              pubDate: dateCreated,
+              _nasa: true,
+              _imgUrl: imgUrl,
+              _lang: 'en'
+            };
+          });
+        })
+        .catch(function (e) {
+          console.error('NASA fetch error:', e);
+          return [];
+        });
+    }
+
+    // ── GITHUB TRENDING HELPER ───────────────────────────────────────
+    function fetchGitHubTrending() {
+      var url = 'https://api.github.com/search/repositories?q=stars:>1000+language:python+language:javascript+language:rust&sort=stars&order=desc&per_page=15';
+
+      return fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var repos = (data.items || []);
+          return repos.slice(0, 15).map(function (repo) {
+            return {
+              title: repo.full_name,
+              description: (repo.description || repo.name) + ' — ' + (repo.language || 'Open Source') + '. ' + repo.stargazers_count + ' stars on GitHub.',
+              link: repo.html_url,
+              author: repo.owner ? repo.owner.login : 'GitHub',
+              pubDate: repo.pushed_at || new Date().toISOString(),
+              _github: true,
+              _stars: repo.stargazers_count,
+              _lang: 'en'
+            };
+          });
+        })
+        .catch(function (e) {
+          console.error('GitHub fetch error:', e);
+          return [];
+        });
+    }
+
+    // ── WIKIPEDIA API HELPERS ─────────────────────────────────────
+    function fetchWikiEn(cat) {
+      var url = 'https://en.wikipedia.org/w/api.php'
+        + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(cat.wikiEn)
+        + '&cmlimit=20&cmtype=page&format=json&origin=*';
+      return fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var pages = (d.query && d.query.categorymembers) || [];
+          if (!pages.length) return fetchWikiSearch(cat.wikiEn, 'en');
+          var ids = pages.slice(0, 12).map(function (p) { return p.pageid; }).join('|');
+          return fetchWikiExtracts(ids, 'en', cat);
+        })
+        .catch(function () { return fetchWikiSearch(cat.wikiEn, 'en', cat); });
+    }
+
+    function fetchWikiAr(cat) {
+      return fetchWikiSearch(cat.wikiAr, 'ar', cat);
+    }
+
+    function fetchWikiSearch(query, lang, cat) {
+      var url = 'https://' + lang + '.wikipedia.org/w/api.php'
+        + '?action=query&list=search&srsearch=' + encodeURIComponent(query)
+        + '&srlimit=15&format=json&origin=*';
+      return fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var results = (d.query && d.query.search) || [];
+          var ids = results.slice(0, 12).map(function (p) { return p.pageid; }).join('|');
+          if (!ids) return [];
+          return fetchWikiExtracts(ids, lang, cat);
+        })
+        .catch(function () { return []; });
+    }
+
+    function fetchWikiExtracts(pageIds, lang, cat) {
+      var url = 'https://' + lang + '.wikipedia.org/w/api.php'
+        + '?action=query&pageids=' + pageIds
+        + '&prop=extracts|info&exintro=true&exchars=600&inprop=url&format=json&origin=*';
+      return fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var pages = (d.query && d.query.pages) || {};
+          return Object.values(pages)
+            .filter(function (p) { return p.title && p.extract; })
+            .map(function (p) {
+              return {
+                title: p.title,
+                description: p.extract,
+                link: p.fullurl || ('https://' + lang + '.wikipedia.org/?curid=' + p.pageid),
+                author: 'Wikipedia',
+                pubDate: '',
+                _wiki: true,
+                _lang: lang
+              };
+            });
+        })
+        .catch(function () { return []; });
+    }
+
+    function fetchHackerNews() {
+      return fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+        .then(function (r) { return r.json(); })
+        .then(function (ids) {
+          var top30 = ids.slice(0, 30);
+          return Promise.all(top30.map(function (id) {
+            return fetch('https://hacker-news.firebaseio.com/v0/item/' + id + '.json')
+              .then(function (r) { return r.json(); })
+              .catch(function () { return null; });
+          }));
+        })
+        .then(function (items) {
+          return items
+            .filter(function (i) { return i && i.title && i.url; })
+            .map(function (i) {
+              return {
+                title: i.title,
+                description: i.title + (i.text ? ' — ' + i.text.substring(0, 200) : ''),
+                link: i.url,
+                author: 'Hacker News — by ' + (i.by || ''),
+                pubDate: i.time ? new Date(i.time * 1000).toISOString() : '',
+                _hn: true,
+                _score: i.score
+              };
+            });
+        })
+        .catch(function () { return []; });
+    }
+
+    // ── SCORE ARTICLE vs CATEGORY ─────────────────────────────────
+    function score(article, cat) {
+      var txt = ((article.title || '') + ' ' + (article.description || '')).toLowerCase();
+      var s = 0;
+      cat.kw.forEach(function (k) { if (txt.indexOf(k) !== -1) s++; });
+
+      // Boost for API-specific articles
+      if (article._arxiv && (cat.id === 'physics' || cat.id === 'math' || cat.id === 'neuro' || cat.id === 'chemistry')) s += 3;
+      if (article._nasa && (cat.id === 'physics' || cat.id === 'climate')) s += 3;
+      if (article._github && cat.id === 'computing') s += 3;
+      if (article._hn && cat.id === 'computing') s += 2;
+
+      return s;
+    }
+
+    // ── COMBINED FETCH FOR CATEGORY ───────────────────────────────
+    function fetchCategory(cat) {
+      var fetchers = [];
+
+      if (LANG === 'ar') {
+        fetchers.push(fetchWikiAr(cat));
+      } else {
+        // English: use category-specified APIs
+        if (cat.apis) {
+          if (cat.apis.includes('wikipedia')) fetchers.push(fetchWikiEn(cat));
+          if (cat.apis.includes('nasa')) fetchers.push(fetchNASA(cat));
+          if (cat.apis.includes('arxiv')) fetchers.push(fetchArxiv(cat));
+          if (cat.apis.includes('hackernews')) fetchers.push(fetchHackerNews());
+          if (cat.apis.includes('github')) fetchers.push(fetchGitHubTrending());
+        } else {
+          // Fallback
+          fetchers.push(fetchWikiEn(cat));
+        }
+      }
+
+      return Promise.all(fetchers);
+    }
+
+    // ── LOAD CATEGORY ─────────────────────────────────────────────
+    function loadCat(cat) {
+      if (showBookmarksPage) showHome();
+      activeCat = cat;
+      searchQ = '';
+      articleOffset = 0;
+      var sb = document.getElementById('searchBox');
+      if (sb) sb.value = '';
+
+      updateTabs();
+      updateHero(cat);
+      document.getElementById('emptyBox').style.display = 'none';
+      document.getElementById('countLabel').textContent = '';
+      document.getElementById('loadMoreBox').style.display = 'none';
+      showSkel();
+
+      var cacheKey = cat.id + '_' + LANG;
+      if (cache[cacheKey]) {
+        currentArticles = cache[cacheKey];
+        render(currentArticles, cat);
+        return;
+      }
+
+      fetchAndRenderCategory(cat);
+    }
+
+    // ── FETCH AND RENDER ──────────────────────────────────────────
+    function fetchAndRenderCategory(cat, append) {
+      var cacheKey = cat.id + '_' + LANG;
+
+      fetchCategory(cat).then(function (arrays) {
+        var seen = {};
+        var all = [];
+        arrays.forEach(function (items) {
+          (items || []).forEach(function (a) {
+            if (!a.title || seen[a.title]) return;
+            seen[a.title] = true;
+            a._catId = cat.id;
+            all.push(a);
+          });
+        });
+
+        // Score and sort
+        var scored = all.map(function (a) {
+          return Object.assign({}, a, { _s: a._wiki ? 2 : score(a, cat) });
+        });
+        scored.sort(function (a, b) { return b._s - a._s; });
+        var top = scored.filter(function (a) { return a._s > 0; }).slice(0, ARTICLES_PER_PAGE);
+        if (top.length < 4) top = all.slice(0, 20);
+
+        if (append) {
+          // Append to existing articles
+          var newTop = top.filter(function (a) {
+            return !currentArticles.some(function (ca) { return ca.title === a.title; });
+          });
+          currentArticles = currentArticles.concat(newTop);
+          cache[cacheKey] = currentArticles;
+        } else {
+          // Replace
+          cache[cacheKey] = top;
+          currentArticles = top;
+        }
+
+        render(currentArticles, cat);
+
+        if (top[0]) {
+          document.getElementById('tickerText').textContent = top[0].title;
+        }
+
+        // Show load more button if we have enough articles
+        if (currentArticles.length >= 12) {
+          document.getElementById('loadMoreBox').style.display = 'block';
+        }
+      });
+    }
+
+    // ── REFRESH CATEGORY ──────────────────────────────────────────
+    function refreshCategory() {
+      if (isRefreshing) return;
+      isRefreshing = true;
+      articleOffset += ARTICLES_PER_PAGE;
+
+      // Update UI
+      var refreshBtn = document.getElementById('refreshBtn');
+      var refreshIcon = document.getElementById('refreshIcon');
+      var refreshLabel = document.getElementById('refreshLabel');
+      refreshBtn.classList.add('loading');
+      refreshIcon.classList.add('refresh-spinner');
+      refreshLabel.textContent = t('refreshing');
+
+      // Clear cache and refetch
+      var cacheKey = activeCat.id + '_' + LANG;
+      delete cache[cacheKey];
+      showSkel();
+
+      fetchCategory(activeCat).then(function (arrays) {
+        var seen = {};
+        var all = [];
+        arrays.forEach(function (items) {
+          (items || []).forEach(function (a) {
+            if (!a.title || seen[a.title]) return;
+            seen[a.title] = true;
+            a._catId = activeCat.id;
+            all.push(a);
+          });
+        });
+
+        var scored = all.map(function (a) {
+          return Object.assign({}, a, { _s: a._wiki ? 2 : score(a, activeCat) });
+        });
+        scored.sort(function (a, b) { return b._s - a._s; });
+        var top = scored.filter(function (a) { return a._s > 0; }).slice(0, ARTICLES_PER_PAGE);
+        if (top.length < 4) top = all.slice(0, 20);
+
+        cache[cacheKey] = top;
+        currentArticles = top;
+        render(top, activeCat);
+
+        if (top[0]) {
+          document.getElementById('tickerText').textContent = top[0].title;
+        }
+
+        // Reset UI
+        refreshBtn.classList.remove('loading');
+        refreshIcon.classList.remove('refresh-spinner');
+        refreshLabel.textContent = t('refresh');
+        isRefreshing = false;
+      }).catch(function (e) {
+        console.error('Refresh error:', e);
+        refreshBtn.classList.remove('loading');
+        refreshIcon.classList.remove('refresh-spinner');
+        refreshLabel.textContent = t('refresh');
+        isRefreshing = false;
+      });
+    }
+
+    // ── LOAD MORE ARTICLES ────────────────────────────────────────
+    function loadMoreArticles() {
+      articleOffset += 12; // Use a distinct offset
+      var loadMoreBtn = document.getElementById('loadMoreBtn');
+      loadMoreBtn.textContent = t('loadingMore');
+      loadMoreBtn.disabled = true;
+
+      fetchCategory(activeCat).then(function (arrays) {
+        var seen = new Set(currentArticles.map(function (a) { return a.title; }));
+        var newArticles = [];
+
+        arrays.forEach(function (items) {
+          (items || []).forEach(function (a) {
+            if (!a.title || seen.has(a.title)) return;
+            seen.add(a.title);
+            a._catId = activeCat.id;
+            newArticles.push(a);
+          });
+        });
+
+        var scored = newArticles.map(function (a) {
+          return Object.assign({}, a, { _s: a._wiki ? 2 : score(a, activeCat) });
+        });
+        scored.sort(function (a, b) { return b._s - a._s; });
+        var topNew = scored.slice(0, 12);
+
+        if (topNew.length > 0) {
+          currentArticles = currentArticles.concat(topNew);
+          render(currentArticles, activeCat);
+        }
+
+        loadMoreBtn.textContent = t('loadMore');
+        loadMoreBtn.disabled = false;
+      }).catch(function (e) {
+        console.error('Load more error:', e);
+        loadMoreBtn.textContent = t('loadMore');
+        loadMoreBtn.disabled = false;
+      });
+    }
+
+    // ── UNSPLASH IMAGE ────────────────────────────────────────────
+    function getImg(article, cat, idx) {
+      if (article._imgUrl) {
+        return article._imgUrl;
+      }
+
+      var title = (article.title || '').toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/);
+      var pools = cat.img;
+      var best = pools.find(function (p) {
+        var terms = p.split(/[,\s]+/);
+        return terms.some(function (term) {
+          return title.some(function (w) { return w.length > 3 && w.indexOf(term) !== -1; });
+        });
+      });
+      var hash = 0;
+      var titleStr = (article.title || 'science');
+      for (var j = 0; j < titleStr.length; j++) {
+        hash = ((hash << 5) - hash) + titleStr.charCodeAt(j);
+        hash = hash & hash; // Convert to 32bit int
+      }
+      var seed = Math.abs(hash);
+      return 'https://picsum.photos/seed/' + seed + '/800/520';
+    }
+
+    // ── READING TIME ESTIMATOR ────────────────────────────────────
+    function readTimeBadge(desc, content) {
+      var text = (content || desc || '').replace(/<[^>]+>/g, ' ');
+      var words = text.trim().split(/\s+/).length;
+      var minutes = Math.max(1, Math.round(words / 200));
+      return minutes + ' ' + t('minRead');
+    }
+
+    // ── SOURCE BADGE HELPER ───────────────────────────────────────
+    function sourceBadge(article) {
+      if (article._arxiv) return 'arXiv';
+      if (article._nasa) return 'NASA';
+      if (article._github) return 'GitHub';
+      if (article._hn) return 'Hacker News';
+      if (article._wiki) return 'Wikipedia';
+      return source(article);
+    }
+
+    // ── RENDER CARDS ─────────────────────────────────────────────
+    function render(articles, cat) {
+      var grid = document.getElementById('grid');
+      var emptyBox = document.getElementById('emptyBox');
+      var countLabel = document.getElementById('countLabel');
+
+      var list = searchQ
+        ? articles.filter(function (a) {
+          return ((a.title || '') + ' ' + (a.description || '')).toLowerCase().indexOf(searchQ) !== -1;
+        })
+        : articles;
+
+      if (!list.length) {
+        grid.innerHTML = '';
+        emptyBox.style.display = 'block';
+        countLabel.textContent = '';
+        document.getElementById('loadMoreBox').style.display = 'none';
+        return;
+      }
+
+      emptyBox.style.display = 'none';
+      countLabel.textContent = list.length + ' article' + (list.length !== 1 ? 's' : '');
+
+      var isRtl = LANG === 'ar';
+
+      grid.innerHTML = list.map(function (a, i) {
+        var imgUrl = getImg(a, cat, i);
+        var snippet = strip(a.description || '', 140);
+        var srcBadge = sourceBadge(a);
+        var dt = fmtDate(a.pubDate);
+        var delay = Math.min(i, 9) * 40;
+        var readLbl = t('readBtn');
+        var rtBadge = readTimeBadge(a.description, a.content);
+        var isSaved = isArticleBookmarked(a);
+
+        return '<article class="a-card fade-up" style="animation-delay:' + delay + 'ms;" onclick="openModal(' + i + ')">'
+          + '<div style="overflow:hidden;height:210px;background:#e8e4dc;">'
+          + '<img class="c-img" data-src="' + esc(imgUrl) + '" alt="' + esc(a.title) + '" onload="this.classList.add(\'vis\')" onerror="this.style.display=\'none\'"/>'
+          + '</div>'
+          + '<div style="padding:22px 22px 18px;">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+          + '<span class="cat-badge">' + esc(srcBadge) + '</span>'
+          + '<button class="bookmark-btn' + (isSaved ? ' saved' : '') + '" onclick="event.stopPropagation();toggleCardBookmark(' + i + ')" style="width:32px;height:32px;padding:0;">'
+          + (isSaved
+            ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="#c9a84c" stroke="#c9a84c" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"/></svg>'
+            : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"/></svg>')
+          + '</button>'
+          + '</div>'
+          + '<h3 class="serif" style="font-size:0.97rem;font-weight:700;color:#1a1a2e;line-height:1.4;margin-bottom:10px;">' + esc(a.title) + '</h3>'
+          + (snippet ? '<p style="font-size:0.8rem;color:#6b6b6b;line-height:1.65;margin-bottom:14px;">' + esc(snippet) + '</p>' : '')
+          + '<div style="border-top:1px solid #ede9e2;padding-top:14px;display:flex;align-items:center;justify-content:space-between;">'
+          + '<span style="font-size:0.72rem;font-weight:600;color:#1a1a2e;letter-spacing:0.04em;">' + readLbl + '</span>'
+          + '<div style="display:flex;align-items:center;gap:8px;">'
+          + '<span class="read-time">' + rtBadge + '</span>'
+          + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'
+          + '</div>'
+          + '</div>'
+          + '</div>'
+          + '</article>';
+      }).join('');
+
+      grid.querySelectorAll('[data-src]').forEach(function (img) {
+        img.src = img.getAttribute('data-src');
+      });
+    }
+
+    // ── TOGGLE CARD BOOKMARK ──────────────────────────────────────
+    function toggleCardBookmark(index) {
+      var article = currentArticles[index];
+      if (!article) return;
+
+      if (isArticleBookmarked(article)) {
+        bookmarks = bookmarks.filter(function (b) { return b.title !== article.title; });
+        showToast(t('removed'));
+      } else {
+        var bookmarkToAdd = {
+          title: article.title,
+          description: article.description || '',
+          link: article.link || '',
+          author: article.author || '',
+          pubDate: article.pubDate || '',
+          _wiki: article._wiki,
+          _arxiv: article._arxiv,
+          _nasa: article._nasa,
+          _github: article._github,
+          _hn: article._hn,
+          _lang: article._lang,
+          _catId: article._catId || activeCat.id,
+          savedAt: new Date().toISOString()
+        };
+        bookmarks.unshift(bookmarkToAdd);
+        showToast(t('bookmarked'));
+      }
+
+      saveBookmarks();
+      updateBookmarksBadge();
+      render(currentArticles, activeCat); // Re-render to update bookmark button
+    }
+
+    // ── SKELETON ─────────────────────────────────────────────────
+    function showSkel() {
+      var items = '';
+      for (var i = 0; i < 12; i++) {
+        items += '<div class="a-card" style="pointer-events:none;opacity:0.7;border-color:rgba(232,228,220,0.4);">'
+          + '<div class="skel" style="height:210px;border-radius:0;"></div>'
+          + '<div style="padding:22px 22px 18px;">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:12px;">'
+          + '<div class="skel" style="height:10px;width:70px;border-radius:4px;"></div>'
+          + '<div class="skel" style="height:14px;width:14px;border-radius:4px;"></div>'
+          + '</div>'
+          + '<div class="skel" style="height:14px;width:100%;margin-bottom:8px;border-radius:4px;"></div>'
+          + '<div class="skel" style="height:14px;width:80%;margin-bottom:16px;border-radius:4px;"></div>'
+          + '<div style="border-top:1px solid rgba(0,0,0,0.05);padding-top:14px;display:flex;justify-content:space-between;">'
+          + '<div class="skel" style="height:10px;width:60px;border-radius:4px;"></div>'
+          + '<div class="skel" style="height:10px;width:40px;border-radius:4px;"></div>'
+          + '</div>'
+          + '</div></div>';
+      }
+      document.getElementById('grid').innerHTML = items;
+    }
+
+    // ── TABS ─────────────────────────────────────────────────────
+    var isTabsExpanded = false;
+
+    function renderTabs() {
+      var labels = TR[LANG].cats;
+      var nav = document.getElementById('tabNav');
+      var topCount = 7;
+
+      nav.innerHTML = CATS.slice(0, topCount).map(function (c, i) {
+        var lbl = labels[i] || c.label;
+        return '<button class="tab-item' + (c.id === activeCat.id ? ' active' : '') + '" data-id="' + c.id + '" onclick="loadCat(CATS[' + i + '])">' + lbl + '</button>';
+      }).join('');
+
+      renderExpandedTabs();
+    }
+
+    function renderExpandedTabs() {
+      var labels = TR[LANG].cats;
+      var grid = document.getElementById('expandedTabsGrid');
+      var topCount = 7;
+
+      grid.innerHTML = CATS.slice(topCount).map(function (c, i) {
+        var idx = i + topCount;
+        var lbl = labels[idx] || c.label;
+        return '<div class="expanded-tab-item' + (c.id === activeCat.id ? ' active' : '') + '" onclick="loadCat(CATS[' + idx + ']); toggleExpandTabs(false)">' + lbl + '</div>';
+      }).join('');
+    }
+
+    function toggleExpandTabs(force) {
+      isTabsExpanded = (force !== undefined) ? force : !isTabsExpanded;
+      var panel = document.getElementById('expandedTabs');
+      var btn = document.getElementById('expandTabsBtn');
+
+      panel.classList.toggle('open', isTabsExpanded);
+      btn.classList.toggle('active', isTabsExpanded);
+      btn.innerHTML = isTabsExpanded
+        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6" /></svg>'
+        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" /></svg>';
+    }
+
+    function updateTabs() {
+      var labels = TR[LANG].cats;
+      var activeIdx = CATS.findIndex(c => c.id === activeCat.id);
+
+      document.querySelectorAll('.tab-item').forEach(function (btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-id') === activeCat.id);
+      });
+      document.querySelectorAll('.expanded-tab-item').forEach(function (btn, i) {
+        btn.classList.toggle('active', (i + 7) === activeIdx);
+      });
+
+      var lbl = labels[activeIdx] || activeCat.label;
+      document.getElementById('heroEyebrow').textContent = labels[activeIdx] || activeCat.label;
+    }
+
+    // ── HERO ──────────────────────────────────────────────────────
+    function updateHero(cat) {
+      var idx = CATS.findIndex(function (c) { return c.id === cat.id; });
+      var label = (TR[LANG].cats[idx] || cat.label);
+      var desc = (TR[LANG].descs[idx] || cat.desc);
+      document.getElementById('heroEyebrow').textContent = t('curated');
+      document.getElementById('heroHeading').textContent = label;
+      document.getElementById('heroSub').textContent = desc;
+    }
+
+    // ── MODAL ─────────────────────────────────────────────────────
+    function openModal(idx) {
+      var list = searchQ
+        ? currentArticles.filter(function (a) {
+          return ((a.title || '') + ' ' + (a.description || '')).toLowerCase().indexOf(searchQ) !== -1;
+        })
+        : currentArticles;
+
+      var a = list[idx];
+      if (!a) return;
+      currentArticle = a;
+
+      var imgUrl = getImg(a, activeCat, idx);
+      var mImg = document.getElementById('mImg');
+      mImg.style.opacity = '0';
+      mImg.src = imgUrl;
+      mImg.onload = function () { mImg.style.opacity = '1'; };
+
+      document.getElementById('mCat').textContent = activeCat.label;
+      document.getElementById('mSource').textContent = source(a);
+      document.getElementById('mDate').textContent = fmtDate(a.pubDate);
+      document.getElementById('mTitle').textContent = a.title;
+      document.getElementById('mBody').innerHTML = '<div class="skel" style="height:20px;width:100%;margin-bottom:12px;"></div><div class="skel" style="height:20px;width:90%;margin-bottom:12px;"></div><div class="skel" style="height:20px;width:95%;"></div>';
+      document.getElementById('mLink').href = a.link || '#';
+      document.getElementById('mLink').textContent = t('readFull');
+
+      updateModalBookmarkButton();
+
+      // Update button labels
+      document.getElementById('listenLabel').textContent = t('listen');
+      document.getElementById('citeLabel').textContent = t('cite');
+      document.getElementById('zenLabel').textContent = t('focus');
+      document.getElementById('listenBtn').classList.remove('playing');
+      document.getElementById('zenBtn').classList.remove('zen-on');
+      document.getElementById('closeModalBtn').textContent = t('close');
+
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // Deep fetch for Wiki articles
+      if (a._wiki) {
+        fetchWikiDeep(a).then(function (fullText) {
+          if (fullText) a.content = fullText;
+          document.getElementById('mBody').innerHTML = buildBody(a);
+        });
+      } else {
+        document.getElementById('mBody').innerHTML = buildBody(a);
+      }
+
+      var modalBox = document.querySelector('.modal-box');
+      if (modalScrollListener && modalBox) {
+        modalBox.removeEventListener('scroll', modalScrollListener);
+      }
+      modalScrollListener = function () {
+        var scrollTop = modalBox.scrollTop || 0;
+        var scrollHeight = modalBox.scrollHeight - modalBox.clientHeight;
+        var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        document.getElementById('readProgress').style.width = progress + '%';
+        document.getElementById('modalProgress').style.width = progress + '%';
+      };
+      modalBox.addEventListener('scroll', modalScrollListener);
+      document.getElementById('readProgress').style.width = '0%';
+      document.getElementById('modalProgress').style.width = '0%';
+
+      renderRelatedArticles(a);
+    }
+
+    function fetchWikiDeep(article) {
+      var lang = article._lang || 'en';
+      var url = 'https://' + lang + '.wikipedia.org/w/api.php'
+        + '?action=query&prop=extracts&exintro=false&exchars=2400&explaintext=true&titles=' + encodeURIComponent(article.title)
+        + '&format=json&origin=*';
+      return fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var pages = d.query.pages;
+          var p = Object.values(pages)[0];
+          return p ? p.extract : null;
+        }).catch(() => null);
+    }
+
+    // ── RENDER RELATED ARTICLES ───────────────────────────────────
+    function renderRelatedArticles(article) {
+      var relatedList = document.getElementById('relatedArticlesList');
+      var relatedSection = document.getElementById('relatedSection');
+
+      var related = currentArticles
+        .filter(function (a) { return a.title !== article.title; })
+        .slice(0, 3);
+
+      if (related.length === 0) {
+        relatedSection.style.display = 'none';
+        return;
+      }
+
+      relatedSection.style.display = 'block';
+
+      relatedList.innerHTML = related.map(function (a, i) {
+        var title = a.title || '';
+        return '<div class="related-item" onclick="openModal(' + currentArticles.indexOf(a) + ')">'
+          + '<div class="serif" style="font-size:0.9rem;font-weight:600;color:#1a1a2e;line-height:1.4;">' + esc(title) + '</div>'
+          + '<div style="font-size:0.75rem;color:#9a9590;margin-top:4px;">' + esc(sourceBadge(a)) + '</div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+
+      // Stop speech
+      if (synth.speaking) synth.cancel();
+
+      // Remove scroll listener
+      var modalBox = document.querySelector('.modal-box');
+      if (modalScrollListener && modalBox) {
+        modalBox.removeEventListener('scroll', modalScrollListener);
+        modalScrollListener = null;
+      }
+
+      // Exit zen mode
+      document.body.classList.remove('zen');
+    }
+
+    function buildBody(a) {
+      var raw = a.content || a.description || '';
+      var text = raw.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      if (!text) return '<p><em>' + t('readFull') + '.</em></p>';
+      var sents = text.match(/[^.!?]+[.!?]+/g) || [text];
+      var paras = [];
+      for (var i = 0; i < sents.length; i += 4) {
+        var chunk = sents.slice(i, i + 4).join(' ').trim();
+        if (chunk) paras.push('<p>' + htmlEnc(chunk) + '</p>');
+      }
+      return paras.length ? paras.join('') : '<p>' + htmlEnc(text.slice(0, 900)) + '</p>';
+    }
+
+    // ── CITATION ─────────────────────────────────────────────────
+    function citeArticle() {
+      if (!currentArticle) return;
+      var citation = currentArticle.title + '. ' + source(currentArticle) + '. ' + (new Date().getFullYear()) + '.';
+      showToast(t('cited'));
+
+      // Copy to clipboard
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(citation);
+      }
+    }
+
+    // ── ZEN MODE ─────────────────────────────────────────────────
+    function toggleZen() {
+      var isZen = document.body.classList.toggle('zen');
+      var zenBtn = document.getElementById('zenBtn');
+      zenBtn.classList.toggle('zen-on', isZen);
+      zenBtn.querySelector('span').textContent = isZen ? 'Exit' : t('focus');
+    }
+
+    // ── TEXT-TO-SPEECH ────────────────────────────────────────────
+    function toggleListen() {
+      if (synth.speaking) {
+        synth.cancel();
+        updateListenButton(false);
+        return;
+      }
+
+      if (!currentArticle) return;
+      var title = currentArticle.title || '';
+      var text = title + '. ' + (currentArticle.description || '');
+
+      var utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = LANG === 'ar' ? 'ar-SA' : 'en-US';
+      utterance.rate = 0.95;
+      utterance.pitch = 1;
+
+      // Try to find a matching voice
+      var voices = synth.getVoices();
+      var targetLang = LANG === 'ar' ? 'ar' : 'en';
+      var preferredVoice = voices.find(function (v) {
+        return v.lang.toLowerCase().startsWith(targetLang);
+      });
+      if (preferredVoice) utterance.voice = preferredVoice;
+
+      utterance.onstart = function () { updateListenButton(true); };
+      utterance.onend = function () { updateListenButton(false); };
+      utterance.onerror = function () { updateListenButton(false); };
+
+      synth.speak(utterance);
+    }
+
+    function updateListenButton(playing) {
+      var btn = document.getElementById('listenBtn');
+      var label = document.getElementById('listenLabel');
+      btn.classList.toggle('playing', playing);
+      label.textContent = playing ? t('stop') : t('listen');
+    }
+
+    // ── MOBILE MENU ───────────────────────────────────────────────
+    function openMobileMenu() {
+      var drawer = document.getElementById('mobileDrawer');
+      var panel = document.getElementById('mobileDrawerPanel');
+      drawer.style.display = 'block';
+      setTimeout(function () { panel.classList.add('open'); }, 10);
+
+      // Render mobile tabs
+      renderMobileTabs();
+    }
+
+    function closeMobileMenu() {
+      var drawer = document.getElementById('mobileDrawer');
+      var panel = document.getElementById('mobileDrawerPanel');
+      panel.classList.remove('open');
+      setTimeout(function () { drawer.style.display = 'none'; }, 280);
+    }
+
+    function renderMobileTabs() {
+      var labels = TR[LANG].cats;
+      var list = document.getElementById('mobileTabList');
+      list.innerHTML = CATS.map(function (c, i) {
+        var lbl = labels[i] || c.label;
+        return '<button class="mob-tab' + (c.id === activeCat.id ? ' active' : '') + '" onclick="loadCat(CATS.find(function(x){return x.id===\'' + c.id + '\'}));closeMobileMenu();">' + lbl + '</button>';
+      }).join('');
+    }
+
+    function retry() { refreshCategory(); }
+
+    // ── SEARCH ────────────────────────────────────────────────────
+    var searchTimer;
+    function handleSearch(q) {
+      searchQ = q.trim().toLowerCase();
+      render(currentArticles, activeCat);
+    }
+
+    // ── LANGUAGE TOGGLE ──────────────────────────────────────────
+    function toggleLang() {
+      LANG = (LANG === 'en') ? 'ar' : 'en';
+      applyLang();
+      loadCat(activeCat);
+    }
+
+    function applyLang() {
+      var isAr = LANG === 'ar';
+      document.documentElement.lang = LANG;
+      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+      document.body.classList.toggle('ar', isAr);
+
+      // Swap font for Arabic
+      document.body.style.fontFamily = isAr ? "'Cairo',system-ui,sans-serif" : "'Inter',system-ui,sans-serif";
+
+      // Update lang button label
+      document.getElementById('langBtn').textContent = t('langBtn');
+
+      // Update search placeholder
+      var sb = document.getElementById('searchBox');
+      if (sb) sb.placeholder = t('searching');
+
+      // Update portal subtitle
+      var sub = document.querySelector('[data-portal-subtitle]');
+      if (sub) sub.textContent = t('subtitle');
+
+      // Rebuild tabs in new language
+      renderTabs();
+      // Update hero text for current cat without re-fetching
+      updateHero(activeCat);
+
+      // Update button labels
+      document.getElementById('refreshLabel').textContent = t('refresh');
+      document.getElementById('loadMoreBtn').textContent = t('loadMore');
+      document.getElementById('clearBookmarksBtn').textContent = t('clearAll');
+    }
+
+    // ── THEME TOGGLE ─────────────────────────────────────────────
+    function toggleTheme() {
+      var isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('learnyu_theme', isDark ? 'dark' : 'light');
+      document.getElementById('iconMoon').style.display = isDark ? 'none' : '';
+      document.getElementById('iconSun').style.display = isDark ? '' : 'none';
+    }
+
+    function initTheme() {
+      var saved = localStorage.getItem('learnyu_theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.body.classList.add('dark');
+        document.getElementById('iconMoon').style.display = 'none';
+        document.getElementById('iconSun').style.display = '';
+      }
+    }
+
+    // ── KEYBOARD SHORTCUTS ───────────────────────────────────────
+    document.addEventListener('keydown', function (e) {
+      var cmdOrCtrl = e.metaKey || e.ctrlKey;
+
+      // Cmd/Ctrl + K: Focus search
+      if (cmdOrCtrl && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('searchBox').focus();
+      }
+
+      // Cmd/Ctrl + L: Toggle language
+      if (cmdOrCtrl && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        toggleLang();
+      }
+
+      // Cmd/Ctrl + D: Toggle dark mode
+      if (cmdOrCtrl && e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        toggleTheme();
+      }
+
+      // Escape: Close modals
+      if (e.key === 'Escape') {
+        closeModal();
+        closeShareModal();
+        closeMobileMenu();
+      }
+    });
+
+    // ── HELPERS ───────────────────────────────────────────────────
+    function strip(html, max) {
+      var t2 = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      return t2.length > max ? t2.slice(0, max).replace(/\s+\S+$/, '') + '…' : t2;
+    }
+    function source(a) {
+      if (a.author && a.author.indexOf('@') === -1 && a.author.length < 50) return a.author;
+      try { return new URL(a.link || '').hostname.replace('www.', ''); } catch (e) { return 'Source'; }
+    }
+    function fmtDate(s) {
+      if (!s) return '';
+      try { return new Date(s).toLocaleDateString(LANG === 'ar' ? 'ar-SA' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }); }
+      catch (e) { return ''; }
+    }
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function htmlEnc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ── BOOT ──────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+      // Apply saved/OS theme before paint
+      initTheme();
+
+      // Load bookmarks from localStorage
+      initBookmarks();
+
+      // Date header
+      var d = document.getElementById('hdrDate');
+      if (d) {
+        d.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        d.style.display = 'block';
+      }
+
+      // Apply current language (sets dir, font, tab labels, placeholders)
+      applyLang();
+
+      // Load first category
+      loadCat(CATS[0]);
+
+      // Search — debounced 260ms
+      var sb = document.getElementById('searchBox');
+      if (sb) {
+        sb.addEventListener('input', function (e) {
+          clearTimeout(searchTimer);
+          searchTimer = setTimeout(function () { handleSearch(e.target.value); }, 260);
+        });
+      }
+
+      // Backdrop click closes modal
+      document.getElementById('modal').addEventListener('click', function (e) {
+        if (e.target === this) closeModal();
+      });
+    });
+  </script>
+</body>
+
+</html>
